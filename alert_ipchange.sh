@@ -31,11 +31,11 @@ OLD_IP=`cat /tmp/ip.txt 2>/dev/null`
 #
 # New IP?
 #
-if [ "$CUR_IP" != "$OLD_IP" ] && [ -z "$CUR_IP" ] ; then
+if [ "$CUR_IP" != "$OLD_IP" ] && [ -n "$CUR_IP" ] ; then
     #
     #	IP changed, mail the change
     #
-    echo "IP: $CUR_IP" | mailx -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S smtp-auth-user=$EMAIL_LOGIN -S smtp-auth-password=$EMAIL_PASS $EMAIL
+    echo "IP: $CUR_IP" | mailx -s "IP changed" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S smtp-auth-user=$EMAIL_LOGIN -S smtp-auth-password=$EMAIL_PASS $EMAIL
 
     if [ "$?" == "0" ] ; then
 	echo $CUR_IP > /tmp/ip.txt
