@@ -6,11 +6,15 @@ EMAIL_LOGIN=your.name@gmail.com
 EMAIL_PASS=your.password
 
 MODEM_IP=192.168.178.1
+MODEM_LOGIN=ziggo
+MODEM_PASSWORD=draadloos
+
+IP_LOG=/tmp/ip.txt
 
 #
 # Login
 #
-curl -L -s -c cookie_alertchange.txt -d "Zigloginnaam=ziggo&Zigpassword=draadloos" http://$MODEM_IP/goform/login_zig > /dev/null
+curl -L -s -c cookie_alertchange.txt -d "Zigloginnaam=$MODEM_LOGIN&Zigpassword=$MODEM_PASSWORD" http://$MODEM_IP/goform/login_zig > /dev/null
 
 #
 # Status page, get IP
@@ -26,7 +30,7 @@ rm -f cookie_alertchange.txt
 #
 # Get the old IP
 #
-OLD_IP=`cat /tmp/ip.txt 2>/dev/null`
+OLD_IP=`cat $IP_LOG 2>/dev/null`
 
 #
 # New IP?
@@ -38,6 +42,6 @@ if [ "$CUR_IP" != "$OLD_IP" ] && [ -n "$CUR_IP" ] ; then
     echo "IP: $CUR_IP" | mailx -s "IP changed" -S smtp-use-starttls -S ssl-verify=ignore -S smtp-auth=login -S smtp=smtp://smtp.gmail.com:587 -S smtp-auth-user=$EMAIL_LOGIN -S smtp-auth-password=$EMAIL_PASS $EMAIL
 
     if [ "$?" == "0" ] ; then
-	echo $CUR_IP > /tmp/ip.txt
+	echo $CUR_IP > $IP_LOG
     fi
 fi

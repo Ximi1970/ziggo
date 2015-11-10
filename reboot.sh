@@ -2,11 +2,13 @@
 #
 #
 MODEM_IP=192.168.178.1
+MODEM_LOGIN=ziggo
+MODEM_PASSWORD=draadloos
 
 #
 # Login
 #
-curl -L -s -c cookie_reboot.txt -d "Zigloginnaam=ziggo&Zigpassword=draadloos" http://$MODEM_IP/goform/login_zig > /dev/null
+curl -L -s -c cookie_reboot.txt -d "Zigloginnaam=$MODEM_LOGIN&Zigpassword=$MODEM_PASSWORD" http://$MODEM_IP/goform/login_zig > /dev/null
 
 #
 # Modem restart
