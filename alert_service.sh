@@ -11,21 +11,17 @@ MODEM_PASSWORD=draadloos
 
 SERVICE_PORT=22
 
+COOKIE=/tmp/cookie_service.txt
+
 #
 # Login
 #
-curl -L -s -c cookie_service.txt -d "Zigloginnaam=$MODEM_LOGIN&Zigpassword=$MODEM_PASSWORD" http://$MODEM_IP/goform/login_zig > /dev/null
+curl -L -s -c $COOKIE -d "Zigloginnaam=$MODEM_LOGIN&Zigpassword=$MODEM_PASSWORD" http://$MODEM_IP/goform/login_zig > /dev/null
 
 #
 # Status page, get IP
 #
-CUR_IP=`curl -L -s -c cookie_service.txt http://$MODEM_IP/Status.asp | grep "InternetIPAddress" | sed -e "s?.*<b>\(.*\)</b>.*?\1?"`
-
-#
-# Logout
-#
-curl -L -s -b cookie_service.txt -c cookie_service.txt --referer http://$MODEM_IP/Status.asp http://$MODEM_IP/logout.asp > /dev/null
-rm -f cookie_service.txt
+CUR_IP=`curl -L -s -c $COOKIE http://$MODEM_IP/Status.asp | grep "InternetIPAddress" | sed -e "s?.*<b>\(.*\)</b>.*?\1?"`
 
 #
 # Check the ssh service
@@ -41,15 +37,15 @@ if [ "$?" == "1" ] ; then
     #
     # Reboot modem
     #
-    curl -L -s -c cookie_service.txt --referer http://$MODEM_IP/Devicerestart.asp -d "mtenRestore=Device+Restart&devicerestart=1" http://$MODEM_IP/goform/Devicerestart > /dev/null
+    curl -L -s -c $COOKIE --referer http://$MODEM_IP/Devicerestart.asp -d "mtenRestore=Device+Restart&devicerestart=1" http://$MODEM_IP/goform/Devicerestart > /dev/null
 else
     #
     # Logout
     #
-    curl -L -s -b cookie_service.txt -c cookie_service.txt --referer http://$MODEM_IP/Status.asp http://$MODEM_IP/logout.asp > /dev/null
+    curl -L -s -b $COOKIE -c $COOKIE --referer http://$MODEM_IP/Status.asp http://$MODEM_IP/logout.asp > /dev/null
 fi
 
 #
 # Cleanup
 #
-rm -f cookie_service.txt
+rm -f $COOKIE
