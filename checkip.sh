@@ -23,4 +23,4 @@ WORLD_IP=`curl -L -s -c $COOKIE http://$MODEM_IP/Status.asp | grep "InternetIPAd
 curl -L -s -b $COOKIE -c $COOKIE --referer http://$MODEM_IP/Status.asp http://$MODEM_IP/logout.asp > /dev/null
 rm -f $COOKIE
 
-echo "My internet address is: "$WORLD_IP
+echo "My internet address is: -"$WORLD_IP"-"
